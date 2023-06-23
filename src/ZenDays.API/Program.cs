@@ -51,15 +51,16 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
-//app.UseRouting();
-app.UseCors("cors");
-//app.UseAuthentication();
-app.UseMiddleware<JwtMiddleware>();
 
+app.UseRouting();
+app.UseCors("cors");
+app.UseAuthentication();
+app.UseAuthorization();
+app.UseHttpsRedirection();
+app.UseMiddleware<JwtMiddleware>();
 app.UseMiddleware(typeof(HandlingMiddleware));
 
-app.UseAuthorization();
+
 
 app.MapControllers();
 
