@@ -1,4 +1,5 @@
 ﻿using Google.Cloud.Firestore;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using ZenDays.Domain.Entities;
 using ZenDays.Infra.Interfaces;
@@ -7,15 +8,25 @@ namespace ZenDays.Infra.Repositories
 {
     public abstract class BaseRepository<T> : IBaseRepository<T> where T : Base
     {
-        protected string diretorio = "C:\\Users\\Matheus\\Source\\ZenDays\\zendays.json";
-        protected string projectId;
         protected FirestoreDb _fireStoreDb;
+        private readonly IConfiguration _configuration;
 
-        public BaseRepository()
+        public BaseRepository(IConfiguration configuration)
         {
-            Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", diretorio);
-            projectId = "zendays-81a95";
-            _fireStoreDb = FirestoreDb.Create(projectId);
+            _configuration = configuration;
+            _fireStoreDb = CreateFirestoreDb();
+        }
+
+        private FirestoreDb CreateFirestoreDb()
+        {
+            string fullPath = "";
+            string? jsonFilePath = _configuration.GetSection("FirestoreConfig:JsonFilePath").Value;
+            string? projectId = _configuration.GetSection("FirestoreConfig:ProjectId").Value;
+            if (jsonFilePath != null) fullPath = Path.GetFullPath(jsonFilePath);
+
+            Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", fullPath);
+
+            return FirestoreDb.Create(projectId);
         }
 
         public async Task<T?> Create(Dictionary<string, object> obj)

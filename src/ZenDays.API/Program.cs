@@ -7,9 +7,16 @@ using ZenDays.IOC;
 using ZenDays.Service.DTO.Config;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Configuration setup
+var configuration = new ConfigurationBuilder()
+    .SetBasePath(builder.Environment.ContentRootPath)
+    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+    .Build();
+
 FirebaseApp.Create(new AppOptions()
 {
-    Credential = GoogleCredential.FromFile("C:\\Users\\Matheus\\Source\\ZenDays\\zendays.json"),
+    Credential = GoogleCredential.FromFile(configuration["FirestoreConfig:JsonFilePath"]),
 });
 // Add services to the container.
 
@@ -40,7 +47,7 @@ builder.Services.AddCors(options =>
                .AllowAnyMethod()
                .AllowAnyHeader()
                .SetIsOriginAllowed(origin => true));
-}); ;
+});
 
 var app = builder.Build();
 

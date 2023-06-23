@@ -1,4 +1,5 @@
 ﻿using Google.Cloud.Firestore;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using ZenDays.Domain.Entities;
 using ZenDays.Infra.Interfaces;
@@ -7,6 +8,10 @@ namespace ZenDays.Infra.Repositories
 {
     public class DepartamentoRepository : BaseRepository<Departamento>, IDepartamentoRepository
     {
+        public DepartamentoRepository(IConfiguration configuration) : base(configuration)
+        {
+        }
+
         public async Task<Departamento?> GetByName(string name, bool isEnabled = true)
         {
             DocumentSnapshot? documentSnapshot = null!;
