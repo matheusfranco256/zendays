@@ -56,7 +56,7 @@ The API is documented using Swagger UI. Once the API is running, you can access 
 
 ## Authentication and Authorization
 
-The ZenDays API uses JWT-based authentication. To access protected endpoints, you need to obtain an access token by providing valid user credentials through the `/api/auth/login` endpoint. The access token should be included in the `Authorization` header of subsequent requests as a Bearer token.
+The ZenDays API uses JWT-based authentication. To access protected endpoints, you need to obtain an access token by providing valid user credentials through the `/api/v1/Auth/Login` endpoint. The access token should be included in the `Authorization` header of subsequent requests as a Bearer token.
 
 ## Endpoints
 
