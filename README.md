@@ -16,7 +16,7 @@ The ZenDays API is a C# application designed to support a mobile app for vacatio
 - C# programming language
 - ASP.NET Core framework
 - Entity Framework Core
-- MySQL database
+- FIREBASE REALTIME DATABASE
 - JSON Web Tokens (JWT) for authentication
 - Swagger UI for API documentation
 
@@ -28,11 +28,11 @@ To run the ZenDays API locally, follow these steps:
 
 2. Navigate to the project directory:
 
-3. Configure the database connection string in the `appsettings.json` file:
+3. Configure the database connection string in the `appsettings.json` file (work in progress):
 
    ```json
    "ConnectionStrings": {
-     "DefaultConnection": "Your-MySQL-Database-Connection-String"
+     "DefaultConnection": "Your-FIREBASE-Database-Connection-String"
    }
    ```
 
