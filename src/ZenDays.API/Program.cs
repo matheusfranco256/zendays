@@ -54,7 +54,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 //app.UseRouting();
 app.UseCors("cors");
-
+//app.UseAuthentication();
 app.UseMiddleware<JwtMiddleware>();
 
 app.UseMiddleware(typeof(HandlingMiddleware));
