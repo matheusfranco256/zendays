@@ -1,4 +1,5 @@
 ﻿using Google.Cloud.Firestore;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using ZenDays.Domain.Entities;
@@ -8,7 +9,7 @@ namespace ZenDays.Infra.Repositories
 {
     public class UserRepository : BaseRepository<Usuario>, IUserRepository
     {
-        public UserRepository(IConfiguration configuration) : base(configuration)
+        public UserRepository(IConfiguration configuration, IHostingEnvironment environment) : base(configuration, environment)
         {
         }
 

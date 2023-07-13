@@ -1,4 +1,5 @@
 ﻿using Google.Cloud.Firestore;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using ZenDays.Domain.Entities;
@@ -10,17 +11,19 @@ namespace ZenDays.Infra.Repositories
     {
         protected FirestoreDb _fireStoreDb;
         private readonly IConfiguration _configuration;
+        private IHostingEnvironment _environment;
 
-        public BaseRepository(IConfiguration configuration)
+
+        public BaseRepository(IConfiguration configuration, IHostingEnvironment environment)
         {
             _configuration = configuration;
-            _fireStoreDb = CreateFirestoreDb();
+            _fireStoreDb = CreateFirestoreDb(Path.Combine(environment.WebRootPath, $"{"zendays"}.json"));
         }
 
-        private FirestoreDb CreateFirestoreDb()
+        private FirestoreDb CreateFirestoreDb(string path)
         {
             string fullPath = "";
-            string? jsonFilePath = _configuration.GetSection("FirestoreConfig:JsonFilePath").Value;
+            string? jsonFilePath = path;
             string? projectId = _configuration.GetSection("FirestoreConfig:ProjectId").Value;
             if (jsonFilePath != null) fullPath = Path.GetFullPath(jsonFilePath);
 

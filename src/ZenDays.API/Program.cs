@@ -14,10 +14,7 @@ var configuration = new ConfigurationBuilder()
     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
     .Build();
 
-FirebaseApp.Create(new AppOptions()
-{
-    Credential = GoogleCredential.FromFile(configuration["FirestoreConfig:JsonFilePath"]),
-});
+
 // Add services to the container.
 
 builder.Services.InjectDependencies();
@@ -42,25 +39,30 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("cors", builder =>
-        builder.AllowAnyOrigin()
-               .AllowAnyMethod()
-               .AllowAnyHeader()
-               .SetIsOriginAllowed(origin => true));
+    options.AddPolicy("*", build => build.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
 });
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+string webRootPath = app.Environment.WebRootPath;
+
+FirebaseApp.Create(new AppOptions()
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+    Credential = GoogleCredential.FromFile(Path.Combine(webRootPath, $"{"zendays"}.json")),
+});
+
+
+// Configure the HTTP request pipeline.
+//if (app.Environment.IsDevelopment())
+//{
+
+//}
+app.UseSwagger();
+app.UseSwaggerUI();
 
 
 app.UseRouting();
-app.UseCors("cors");
+app.UseCors("*");
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseHttpsRedirection();

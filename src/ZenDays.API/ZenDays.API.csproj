@@ -17,4 +17,8 @@
     <ProjectReference Include="..\ZenDays.Service\ZenDays.Service.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\" />
+  </ItemGroup>
+
 </Project>

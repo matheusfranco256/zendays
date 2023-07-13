@@ -1,4 +1,5 @@
 ﻿using Google.Cloud.Firestore;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using ZenDays.Domain.Entities;
@@ -8,8 +9,11 @@ namespace ZenDays.Infra.Repositories
 {
     public class DepartamentoRepository : BaseRepository<Departamento>, IDepartamentoRepository
     {
-        public DepartamentoRepository(IConfiguration configuration) : base(configuration)
+        private IHostingEnvironment _environment;
+
+        public DepartamentoRepository(IConfiguration configuration, IHostingEnvironment environment) : base(configuration, environment)
         {
+            _environment = environment;
         }
 
         public async Task<Departamento?> GetByName(string name, bool isEnabled = true)
