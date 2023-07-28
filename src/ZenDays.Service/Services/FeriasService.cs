@@ -12,9 +12,11 @@ namespace ZenDays.Service.Services
     public class FeriasService : BaseService<Ferias, FeriasDTO>, IFeriasService
     {
         private readonly IUserService _userService;
+        private readonly IFeriasRepository _feriasRepository;
         public FeriasService(IFeriasRepository feriasRepository, IMapper mapper, IUserService userService) : base(feriasRepository, mapper)
         {
             _userService = userService;
+            _feriasRepository = feriasRepository;
         }
 
         public async Task<ResultViewModel> CreateFerias(FeriasDTO obj)
@@ -47,5 +49,16 @@ namespace ZenDays.Service.Services
             if (atualizaUsuario == null) return new ResultViewModel(null, 400, false, ErrorMessages.SerializationFailed);
             return await Update(atualizaUsuario, obj.Id);
         }
+
+        public async Task<ResultViewModel> GetAllFerias(string? userId)
+        {
+            var fromdb = await _feriasRepository.GetAllFerias(userId);
+            if (fromdb.Count == 0)
+            {
+                return new ResultViewModel(null, 404, false, ErrorMessages.NotFound);
+            }
+            return new ResultViewModel(_mapper.Map<List<FeriasDTO>>(fromdb), 200, true, SuccessMessages.Found);
+        }
+
     }
 }

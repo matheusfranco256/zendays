@@ -9,5 +9,6 @@ namespace ZenDays.Service.Interfaces
         Task<ResultViewModel> CreateFerias(FeriasDTO obj);
         Task<ResultViewModel> UpdateFerias(FeriasDTO obj);
         Task<ResultViewModel> DisableFerias(string id);
+        Task<ResultViewModel> GetAllFerias(string? userId);
     }
 }

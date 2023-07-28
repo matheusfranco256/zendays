@@ -41,9 +41,9 @@ namespace ZenDays.API.Controllers
         }
 
         [HttpGet("GetAll")]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] string? userId)
         {
-            return Result(await _feriasService.GetAll());
+            return Result(await _feriasService.GetAllFerias(userId));
         }
 
         [HttpDelete("Disable")]
