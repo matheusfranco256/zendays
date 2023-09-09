@@ -29,6 +29,9 @@ namespace ZenDays.Service.Services
             if (departamento.Data == null) return new ResultViewModel(null, 404, false, ErrorMessages.NotFound);
 
             obj.Senha = HashHelper.HashGeneration(obj.Senha);
+            obj.SaldoFerias = 0;
+            obj.DataCadastro = DateTime.Now.ToString();
+            obj.FinalPeriodoAquisitivo = DateTime.Now.AddDays(364).ToString();
             var json = JsonConvert.SerializeObject(obj);
             var insereUsuario = JsonConvert.DeserializeObject<Dictionary<string, object>>(json);
             if (insereUsuario == null) return new ResultViewModel(null, 400, false, ErrorMessages.SerializationFailed);
@@ -89,6 +92,11 @@ namespace ZenDays.Service.Services
             if (departamento.Data == null) return new ResultViewModel(null, 404, false, ErrorMessages.NotFound);
             obj.Senha = userOld.Senha;
             obj.TipoUsuario = userOld.TipoUsuario;
+            obj.DataCadastro = userOld.DataCadastro;
+            obj.UltimaVerificacao = userOld.UltimaVerificacao;
+            obj.UltimasFerias = userOld.UltimasFerias;
+            obj.FinalPeriodoAquisitivo = userOld.FinalPeriodoAquisitivo;
+            obj.SaldoFerias = userOld.SaldoFerias;
             var json = JsonConvert.SerializeObject(obj);
             var atualizaUsuario = JsonConvert.DeserializeObject<Dictionary<string, object>>(json);
             if (atualizaUsuario == null) return new ResultViewModel(null, 400, false, ErrorMessages.SerializationFailed);

@@ -28,8 +28,16 @@ namespace ZenDays.Domain.Entities
         public string Cargo { get; private set; } = null!;
         [FirestoreProperty("TipoUsuario")]
         public int TipoUsuario { get; private set; }
+        [FirestoreProperty("DataCadastro")]
+        public string DataCadastro { get; set; }
+        [FirestoreProperty("SaldoFerias")]
+        public int SaldoFerias { get; set; } = 0;
+        [FirestoreProperty("UltimaVerificacao")]
+        public string UltimaVerificacao { get; set; }
+        [FirestoreProperty("FinalPeriodoAquisitivo")]
+        public string FinalPeriodoAquisitivo { get; set; }
 
-        public Usuario(string nome, string cPF, string? endereco, double salario, string? telefone, string dataNascimento, string ultimasFerias, string email, string senha, string idDepartamento, string cargo, int tipoUsuario)
+        public Usuario(string nome, string cPF, string? endereco, double salario, string? telefone, string dataNascimento, string ultimasFerias, string email, string senha, string idDepartamento, string cargo, int tipoUsuario, string dataCadastro, int saldoFerias, string ultimaVerificacao, string finalPeriodoAquisitivo)
         {
             Nome = nome;
             CPF = cPF;
@@ -43,6 +51,11 @@ namespace ZenDays.Domain.Entities
             IdDepartamento = idDepartamento;
             Cargo = cargo;
             TipoUsuario = tipoUsuario;
+            DataCadastro = dataCadastro;
+            SaldoFerias = saldoFerias;
+            UltimaVerificacao = ultimaVerificacao;
+            FinalPeriodoAquisitivo = finalPeriodoAquisitivo;
+
         }
     }
 }

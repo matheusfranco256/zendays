@@ -3,6 +3,7 @@ using FirebaseAdmin;
 using Google.Apis.Auth.OAuth2;
 using ZenDays.API.Configurations;
 using ZenDays.API.Middlewares;
+using ZenDays.API.Quartz;
 using ZenDays.IOC;
 using ZenDays.Service.DTO.Config;
 
@@ -13,9 +14,6 @@ var configuration = new ConfigurationBuilder()
     .SetBasePath(builder.Environment.ContentRootPath)
     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
     .Build();
-
-
-// Add services to the container.
 
 builder.Services.InjectDependencies();
 #region AutoMapper
@@ -33,9 +31,13 @@ builder.Services.AddAuthorizationConfiguration();
 builder.Services.AddSwaggerConfiguration();
 #endregion
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+#region quartz
+builder.Services.AddSingleton<QuartzInitializer>();
+await QuartzInitializer.Initialize();
+#endregion
 
 builder.Services.AddCors(options =>
 {
@@ -44,6 +46,8 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
+
+
 string webRootPath = app.Environment.WebRootPath;
 
 FirebaseApp.Create(new AppOptions()
@@ -51,12 +55,6 @@ FirebaseApp.Create(new AppOptions()
     Credential = GoogleCredential.FromFile(Path.Combine(webRootPath, $"{"zendays"}.json")),
 });
 
-
-// Configure the HTTP request pipeline.
-//if (app.Environment.IsDevelopment())
-//{
-
-//}
 app.UseSwagger();
 app.UseSwaggerUI();
 

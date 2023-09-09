@@ -25,5 +25,9 @@
         public string Cargo { get; set; } = null!;
 
         public int TipoUsuario { get; set; }
+        public string DataCadastro { get; set; } = null!;
+        public int SaldoFerias { get; set; }
+        public string UltimaVerificacao { get; set; } = null!;
+        public string FinalPeriodoAquisitivo { get; set; } = null!;
     }
 }
