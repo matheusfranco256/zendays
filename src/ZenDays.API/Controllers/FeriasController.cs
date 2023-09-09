@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ZenDays.Core.Models;
+using ZenDays.Core.Utilities;
 using ZenDays.Service.DTO;
 using ZenDays.Service.Interfaces;
 
@@ -51,5 +52,12 @@ namespace ZenDays.API.Controllers
         {
             return Result(await _feriasService.DisableFerias(id));
         }
+
+        [HttpPatch("Status")]
+        public async Task<IActionResult> Status(string id, Enumerators.Status status)
+        {
+            return Result(await _feriasService.UpdateStatus(id, status));
+        }
+
     }
 }

@@ -17,7 +17,7 @@ namespace ZenDays.Domain.Entities
         [FirestoreProperty("DiasVendidos")]
         public int DiasVendidos { get; private set; }
         [FirestoreProperty("Status")]
-        public int Status { get; private set; }
+        public int Status { get; set; }
         [FirestoreProperty("Mensagem")]
         public string? Mensagem { get; private set; }
 

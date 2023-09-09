@@ -1,4 +1,5 @@
 ﻿using ZenDays.Core.Models;
+using ZenDays.Core.Utilities;
 using ZenDays.Domain.Entities;
 using ZenDays.Service.DTO;
 
@@ -10,5 +11,6 @@ namespace ZenDays.Service.Interfaces
         Task<ResultViewModel> UpdateFerias(FeriasDTO obj);
         Task<ResultViewModel> DisableFerias(string id);
         Task<ResultViewModel> GetAllFerias(string? userId);
+        Task<ResultViewModel> UpdateStatus(string id, Enumerators.Status status);
     }
 }
