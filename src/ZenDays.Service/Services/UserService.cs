@@ -115,5 +115,38 @@ namespace ZenDays.Service.Services
 
             return usuarioAtualizado;
         }
+
+        public async Task VerificaFerias()
+        {
+            var usuarios = await _userRepository.GetAll();
+            var dataAtual = DateTime.Now;
+
+            foreach (var usuario in usuarios)
+            {
+
+                if (usuario.FinalPeriodoAquisitivo is not null)
+                {
+                    var finalPeriodoAquisitivo = DateTime.Parse(usuario.FinalPeriodoAquisitivo);
+
+                    if (dataAtual >= finalPeriodoAquisitivo)
+                    {
+
+                        int diasASomar = 31;
+                        usuario.SaldoFerias += diasASomar;
+
+                        usuario.FinalPeriodoAquisitivo = dataAtual.AddYears(1).ToString("dd/MM/yyyy");
+
+
+
+                        Console.WriteLine($"Usuário {usuario.Nome} - Saldo de férias atualizado para {usuario.SaldoFerias} dias.");
+                    }
+                    usuario.UltimaVerificacao = dataAtual.ToString("dd/MM/yyyy");
+
+                    var json = JsonConvert.SerializeObject(usuario);
+                    var atualizaUsuario = JsonConvert.DeserializeObject<Dictionary<string, object>>(json);
+                    if (atualizaUsuario is not null) await _userRepository.Update(atualizaUsuario, usuario.Id);
+                }
+            }
+        }
     }
 }

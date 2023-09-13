@@ -54,6 +54,13 @@ namespace ZenDays.API.Controllers
         {
             return Result(await _userService.GetAll());
         }
+        [AllowAnonymous]
+        [HttpPost()]
+        public async Task<IActionResult> VerificaFerias()
+        {
+            await _userService.VerificaFerias();
+            return Result(new ResultViewModel(null, 200, true));
+        }
 
         [HttpDelete("Disable")]
         public async Task<IActionResult> Delete(string id)

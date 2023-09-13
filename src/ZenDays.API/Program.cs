@@ -3,7 +3,6 @@ using FirebaseAdmin;
 using Google.Apis.Auth.OAuth2;
 using ZenDays.API.Configurations;
 using ZenDays.API.Middlewares;
-using ZenDays.API.Quartz;
 using ZenDays.IOC;
 using ZenDays.Service.DTO.Config;
 
@@ -33,11 +32,6 @@ builder.Services.AddSwaggerConfiguration();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
-#region quartz
-builder.Services.AddSingleton<QuartzInitializer>();
-await QuartzInitializer.Initialize();
-#endregion
 
 builder.Services.AddCors(options =>
 {
