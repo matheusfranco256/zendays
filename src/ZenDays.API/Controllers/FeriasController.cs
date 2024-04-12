@@ -22,41 +22,22 @@ namespace ZenDays.API.Controllers
 		}
 
 		[HttpPost("Register")]
-		public async Task<IActionResult> Register([FromBody] RegisterFeriasViewModel model)
-		{
-			return Result(await _feriasService.CreateFerias(_mapper.Map<FeriasDTO>(model)));
-		}
+		public async Task<IActionResult> Register([FromBody] RegisterFeriasViewModel model) => Result(await _feriasService.CreateFerias(_mapper.Map<FeriasDTO>(model)));
 
 		[HttpPut("Update")]
-		public async Task<IActionResult> Update([FromBody] UpdateFeriasViewModel model)
-		{
-			return Result(await _feriasService.UpdateFerias(_mapper.Map<FeriasDTO>(model)));
-		}
-
+		public async Task<IActionResult> Update([FromBody] UpdateFeriasViewModel model) => Result(await _feriasService.UpdateFerias(_mapper.Map<FeriasDTO>(model)));
 
 		[HttpGet("GetById")]
-		public async Task<IActionResult> Get(string id)
-		{
-			return Result(await _feriasService.Get(id));
-		}
+		public async Task<IActionResult> Get(string id) => Result(await _feriasService.Get(id));
 
 		[HttpGet("GetAll")]
-		public async Task<IActionResult> GetAll([FromQuery] string? userId)
-		{
-			return Result(await _feriasService.GetAllFerias(userId));
-		}
+		public async Task<IActionResult> GetAll([FromQuery] string? userId) => Result(await _feriasService.GetAllFerias(userId));
 
 		[HttpDelete("Disable")]
-		public async Task<IActionResult> Delete(string id)
-		{
-			return Result(await _feriasService.DisableFerias(id));
-		}
+		public async Task<IActionResult> Delete(string id) => Result(await _feriasService.DisableFerias(id));
 
 		[HttpPatch("Status")]
-		public async Task<IActionResult> Status(string id, Enumerators.Status status)
-		{
-			return Result(await _feriasService.UpdateStatus(id, status));
-		}
+		public async Task<IActionResult> Status(string id, Enumerators.Status status) => Result(await _feriasService.UpdateStatus(id, status));
 
 	}
 }

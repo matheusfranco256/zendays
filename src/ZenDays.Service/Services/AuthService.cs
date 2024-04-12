@@ -26,7 +26,6 @@ namespace ZenDays.Service.Services
 			_tokenConfig = tokenConfig.Value;
 			_userRepository = userRepository;
 		}
-
 		public async Task<ResultViewModel> AuthenticateUser(LoginViewModel model)
 		{
 			var usuario = await _userRepository.GetByEmail(model.Email);
@@ -38,9 +37,6 @@ namespace ZenDays.Service.Services
 
 			return new ResultViewModel(await GenerateToken(usuario), 200, true, "Autorizado");
 		}
-
-
-
 		private async Task<UserAccessTokenModel> GenerateToken(Usuario usuario)
 		{
 			try
@@ -104,7 +100,6 @@ namespace ZenDays.Service.Services
 			}
 
 		}
-
 		public async Task<ResultViewModel> ResetPassword(string email, string senhaAntiga, string novaSenha)
 		{
 			var usuario = await _userRepository.GetByEmail(email);
