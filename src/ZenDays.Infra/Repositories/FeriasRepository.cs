@@ -18,7 +18,7 @@ namespace ZenDays.Infra.Repositories
 			Query query = _fireStoreDb.Collection(typeof(Ferias).Name);
 
 			if (!string.IsNullOrEmpty(userId)) query = query.WhereEqualTo("IdUsuario", userId);
-			if (!string.IsNullOrEmpty(status)) query = query.WhereEqualTo("Status", status);
+			if (!string.IsNullOrEmpty(status)) query = query.WhereEqualTo("Status", int.Parse(status));
 
 
 
@@ -44,20 +44,21 @@ namespace ZenDays.Infra.Repositories
 
 		public async Task<List<Ferias>> GetAllFeriasByDepartamento(string? idDepartamento, string? status)
 		{
-			Query feriasQuery = _fireStoreDb.Collection("ferias");
+			Query feriasQuery = _fireStoreDb.Collection(typeof(Ferias).Name);
 			if (!string.IsNullOrEmpty(idDepartamento))
 			{
 
 				//usuarios com o Id do departamento
-				var usuariosQuery = _fireStoreDb.Collection("Usuario")
+				var usuariosQuery = _fireStoreDb.Collection(typeof(Usuario).Name)
 					.WhereEqualTo("IdDepartamento", idDepartamento);
 				var usuariosSnapshot = await usuariosQuery.GetSnapshotAsync();
 				var idsUsuarios = usuariosSnapshot.Documents.Select(doc => doc.Id).ToList();
 
+				if (idsUsuarios.Count() == 0) return new List<Ferias>();
 				//ferias dos usuarios filtrados
 				feriasQuery = feriasQuery.WhereIn("IdUsuario", idsUsuarios);
 			}
-			if (!string.IsNullOrEmpty(status)) feriasQuery = feriasQuery.WhereEqualTo("Status", status);
+			if (!string.IsNullOrEmpty(status)) feriasQuery = feriasQuery.WhereEqualTo("Status", int.Parse(status));
 
 			var feriasSnapshot = await feriasQuery.GetSnapshotAsync();
 			List<Ferias> entitys = new();
@@ -82,16 +83,17 @@ namespace ZenDays.Infra.Repositories
 		public async Task<List<Ferias>> GetAllFeriasByTipoUsuario(string tipoUsuario, string? status)
 		{
 			//usuarios com o Id do departamento
-			var usuariosQuery = _fireStoreDb.Collection("Usuario")
-				.WhereEqualTo("TipoUsuario", tipoUsuario);
+			var usuariosQuery = _fireStoreDb.Collection(typeof(Usuario).Name)
+				.WhereEqualTo("TipoUsuario", int.Parse(tipoUsuario));
 			var usuariosSnapshot = await usuariosQuery.GetSnapshotAsync();
 			var idsUsuarios = usuariosSnapshot.Documents.Select(doc => doc.Id).ToList();
 
+			if (idsUsuarios.Count() == 0) return new List<Ferias>();
 			//ferias dos usuarios filtrados
-			var feriasQuery = _fireStoreDb.Collection("Ferias")
+			var feriasQuery = _fireStoreDb.Collection(typeof(Ferias).Name)
 				.WhereIn("IdUsuario", idsUsuarios);
 
-			if (!string.IsNullOrEmpty(status)) feriasQuery = feriasQuery.WhereEqualTo("Status", status);
+			if (!string.IsNullOrEmpty(status)) feriasQuery = feriasQuery.WhereEqualTo("Status", int.Parse(status));
 
 			var feriasSnapshot = await feriasQuery.GetSnapshotAsync();
 			List<Ferias> entitys = new();
