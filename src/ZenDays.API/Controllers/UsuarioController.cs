@@ -39,6 +39,9 @@ namespace ZenDays.API.Controllers
 		[HttpGet("GetAll")]
 		public async Task<IActionResult> GetAll() => Result(await _userService.GetAll());
 
+		[HttpGet("GetAllFiltros")]
+		public async Task<IActionResult> GetAll(string departamentoId) => Result(await _userService.GetAll(new List<(string field, string value)> { new("IdDepartamento", departamentoId) }));
+
 		[AllowAnonymous]
 		[HttpPost()]
 		public async Task<IActionResult> VerificaFerias()

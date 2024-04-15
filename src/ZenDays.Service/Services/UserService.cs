@@ -49,7 +49,6 @@ namespace ZenDays.Service.Services
 
 			return new ResultViewModel(null, 201, true);
 		}
-
 		public async Task<ResultViewModel> DisableUser(string id)
 		{
 			var userOld = await _userRepository.Get(id);
@@ -67,19 +66,16 @@ namespace ZenDays.Service.Services
 			await Disable(desativaUsuario, id);
 			return new ResultViewModel(null, 200, true);
 		}
-
 		public async Task<ResultViewModel> GetByEmail(string email)
 		{
 			var usuario = await _userRepository.GetByEmail(email);
 			return usuario == null ? new ResultViewModel(null, 404, false, ErrorMessages.NotFound) : new ResultViewModel(_mapper.Map<UsuarioDTO>(usuario), 200, true, SuccessMessages.Found);
 		}
-
 		public async Task<ResultViewModel> GetByName(string name)
 		{
 			var usuario = await _userRepository.GetByName(name);
 			return usuario == null ? new ResultViewModel(null, 404, false, ErrorMessages.NotFound) : new ResultViewModel(_mapper.Map<UsuarioDTO>(usuario), 200, true, SuccessMessages.Found);
 		}
-
 		public async Task<ResultViewModel> UpdateUser(UsuarioDTO obj)
 		{
 			var userOld = await _userRepository.Get(obj.Id);
@@ -117,7 +113,6 @@ namespace ZenDays.Service.Services
 
 			return new ResultViewModel(null, 201, true);
 		}
-
 		public async Task VerificaFerias()
 		{
 			var usuarios = await _userRepository.GetAll();

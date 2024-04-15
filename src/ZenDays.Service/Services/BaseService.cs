@@ -50,6 +50,11 @@ namespace ZenDays.Service.Services
 			var fromdb = await _baseRepository.GetAll();
 			return fromdb.Count == 0 ? new ResultViewModel(null, 404, false, ErrorMessages.NotFound) : new ResultViewModel(_mapper.Map<List<T>>(fromdb), 200, true, SuccessMessages.Found);
 		}
+		public async Task<ResultViewModel> GetAll(List<(string field, string value)> filtro)
+		{
+			var fromdb = await _baseRepository.GetAll(filtro);
+			return fromdb.Count == 0 ? new ResultViewModel(null, 404, false, ErrorMessages.NotFound) : new ResultViewModel(_mapper.Map<List<T>>(fromdb), 200, true, SuccessMessages.Found);
+		}
 		public async Task<ResultViewModel> Update(Dictionary<string, object> obj, string id)
 		{
 			try
