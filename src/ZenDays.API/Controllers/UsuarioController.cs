@@ -9,7 +9,7 @@ namespace ZenDays.API.Controllers
 {
 	[Route("api/v1/Usuario")]
 	[ApiController]
-	// [Authorize(AuthenticationSchemes = "Bearer")]
+	[Authorize(AuthenticationSchemes = "Bearer")]
 	public class UsuarioController : BaseController
 	{
 		private readonly IMapper _mapper;

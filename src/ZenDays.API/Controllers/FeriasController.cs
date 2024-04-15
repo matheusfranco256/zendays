@@ -1,4 +1,6 @@
-﻿using AutoMapper;
+﻿using System.ComponentModel.DataAnnotations;
+using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ZenDays.Core.Models;
 using ZenDays.Core.Utilities;
@@ -9,7 +11,7 @@ namespace ZenDays.API.Controllers
 {
 	[Route("api/v1/Ferias")]
 	[ApiController]
-	//[Authorize(AuthenticationSchemes = "Bearer")]
+	[Authorize(AuthenticationSchemes = "Bearer")]
 	public class FeriasController : BaseController
 	{
 		private readonly IMapper _mapper;
@@ -30,8 +32,15 @@ namespace ZenDays.API.Controllers
 		[HttpGet("GetById")]
 		public async Task<IActionResult> Get(string id) => Result(await _feriasService.Get(id));
 
-		[HttpGet("GetAll")]
-		public async Task<IActionResult> GetAll([FromQuery] string? userId) => Result(await _feriasService.GetAllFerias(userId));
+		[HttpGet]
+		[Route("usuario")]
+		public async Task<IActionResult> GetAll([FromQuery] string? userId, string? status) => Result(await _feriasService.GetAllFerias(userId, status));
+		[HttpGet]
+		[Route("departamento")]
+		public async Task<IActionResult> GetAllByDepartamento([FromQuery][Required] string idDepartamento, string? status) => Result(await _feriasService.GetAllFeriasByDepartamento(idDepartamento, status));
+		[HttpGet]
+		[Route("tipoUsuario")]
+		public async Task<IActionResult> GetAllByTipoUsuario([FromQuery][Required] string tipoUsuario, string? status) => Result(await _feriasService.GetAllFeriasByTipoUsuario(tipoUsuario, status));
 
 		[HttpDelete("Disable")]
 		public async Task<IActionResult> Delete(string id) => Result(await _feriasService.DisableFerias(id));

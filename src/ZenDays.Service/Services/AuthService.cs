@@ -58,12 +58,7 @@ namespace ZenDays.Service.Services
 
 					if (response.IsSuccessStatusCode)
 					{
-						var claims = new List<Claim>();
-
-						claims.Add(new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString("N")));
-						claims.Add(new Claim(JwtRegisteredClaimNames.UniqueName, usuario.Email));
-						claims.Add(new Claim("id", usuario.Id.ToString()));
-						ClaimsIdentity identity = new ClaimsIdentity(new GenericIdentity(usuario.Email, "Login"), claims);
+						ClaimsIdentity identity = new ClaimsIdentity(new GenericIdentity(usuario.Email, "Login"));
 
 						DateTime dtCreation = DateTime.UtcNow;
 						DateTime dtExpiration = dtCreation + (TimeSpan.FromSeconds(_tokenConfig.Seconds != 0 ? _tokenConfig.Seconds : 432000));
@@ -85,7 +80,7 @@ namespace ZenDays.Service.Services
 						});
 
 						var token = handler.WriteToken(securityToken);
-						return await Task.FromResult(new UserAccessTokenModel(usuario.Id, usuario.Email, claims, dtCreation, dtExpiration, token));
+						return await Task.FromResult(new UserAccessTokenModel(usuario.Id, usuario.Email, usuario.TipoUsuario.ToString(), usuario.IdDepartamento, dtCreation, dtExpiration, token));
 					}
 					else
 					{

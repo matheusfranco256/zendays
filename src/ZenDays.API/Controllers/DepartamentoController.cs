@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ZenDays.Core.Models;
 using ZenDays.Service.DTO;
@@ -8,7 +9,7 @@ namespace ZenDays.API.Controllers
 {
 	[Route("api/v1/Departamento")]
 	[ApiController]
-	//[Authorize(AuthenticationSchemes = "Bearer")]
+	[Authorize(AuthenticationSchemes = "Bearer")]
 	public class DepartamentoController : BaseController
 	{
 		private readonly IMapper _mapper;

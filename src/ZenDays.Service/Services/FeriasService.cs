@@ -91,11 +91,23 @@ namespace ZenDays.Service.Services
 			return resultUpdate.Success ? new ResultViewModel(null, 200, true) : resultUpdate;
 
 		}
-		public async Task<ResultViewModel> GetAllFerias(string? userId)
+		public async Task<ResultViewModel> GetAllFerias(string? userId, string? status)
 		{
-			var fromdb = await _feriasRepository.GetAllFerias(userId);
+			var fromdb = await _feriasRepository.GetAllFerias(userId, status);
 			return fromdb.Count == 0 ? new ResultViewModel(null, 404, false, ErrorMessages.NotFound) : new ResultViewModel(_mapper.Map<List<FeriasDTO>>(fromdb), 200, true, SuccessMessages.Found);
 		}
+		public async Task<ResultViewModel> GetAllFeriasByDepartamento(string departamentoId, string? status)
+		{
+			var fromdb = await _feriasRepository.GetAllFeriasByDepartamento(departamentoId, status);
+			return fromdb.Count == 0 ? new ResultViewModel(null, 404, false, ErrorMessages.NotFound) : new ResultViewModel(_mapper.Map<List<FeriasDTO>>(fromdb), 200, true, SuccessMessages.Found);
+		}
+
+		public async Task<ResultViewModel> GetAllFeriasByTipoUsuario(string tipoUsuario, string? status)
+		{
+			var fromdb = await _feriasRepository.GetAllFeriasByTipoUsuario(tipoUsuario, status);
+			return fromdb.Count == 0 ? new ResultViewModel(null, 404, false, ErrorMessages.NotFound) : new ResultViewModel(_mapper.Map<List<FeriasDTO>>(fromdb), 200, true, SuccessMessages.Found);
+		}
+
 
 	}
 }
