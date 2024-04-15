@@ -52,6 +52,11 @@ namespace ZenDays.Service.Services
 
 		public async Task<ResultViewModel> DisableUser(string id)
 		{
+			var userOld = await _userRepository.Get(id);
+			if (userOld == null) return new ResultViewModel(null, 400, false, ErrorMessages.NotFound);
+			var userEmail = await _userRepository.GetByEmail(userOld.Email);
+
+			if (userEmail != null && userEmail.Email == "admin@admin.com") return new ResultViewModel(null, 403, false, ErrorMessages.Forbidden);
 			var result = await Get(id);
 			if (result.Data == null) return new ResultViewModel(null, 404, false, ErrorMessages.NotFound);
 			result.Data.Ativo = false;
@@ -79,15 +84,19 @@ namespace ZenDays.Service.Services
 		{
 			var userOld = await _userRepository.Get(obj.Id);
 			if (userOld == null) return new ResultViewModel(null, 400, false, ErrorMessages.NotFound);
+			if (userOld.Email == "admin@admin.com") return new ResultViewModel(null, 403, false, ErrorMessages.Forbidden);
+
 			var userEmail = await _userRepository.GetByEmail(obj.Email);
 			if (userEmail != null && userEmail.Id != obj.Id) return new ResultViewModel(null, 404, false, ErrorMessages.EmailAlreadyExists);
+
 			var departamento = await _departamentoService.Get(obj.IdDepartamento);
 			if (departamento.Data == null) return new ResultViewModel(null, 404, false, ErrorMessages.NotFound);
+
+
 			obj.Senha = userOld.Senha;
 			obj.TipoUsuario = userOld.TipoUsuario;
 			obj.DataCadastro = userOld.DataCadastro;
 			obj.UltimaVerificacao = userOld.UltimaVerificacao;
-			obj.UltimasFerias = userOld.UltimasFerias;
 			obj.FinalPeriodoAquisitivo = userOld.FinalPeriodoAquisitivo;
 			obj.SaldoFerias = userOld.SaldoFerias;
 			var json = JsonConvert.SerializeObject(obj);

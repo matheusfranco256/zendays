@@ -12,9 +12,11 @@ namespace ZenDays.Service.Services
 	public class DepartamentoService : BaseService<Departamento, DepartamentoDTO>, IDepartamentoService
 	{
 		private readonly IDepartamentoRepository _departamentoRepository;
-		public DepartamentoService(IDepartamentoRepository departamentoRepository, IMapper mapper) : base(departamentoRepository, mapper)
+		private readonly IUserRepository _userRepository;
+		public DepartamentoService(IDepartamentoRepository departamentoRepository, IMapper mapper, IUserRepository userRepository) : base(departamentoRepository, mapper)
 		{
 			_departamentoRepository = departamentoRepository;
+			_userRepository = userRepository;
 		}
 
 		public async Task<ResultViewModel> CreateDepartamento(DepartamentoDTO obj)
@@ -30,10 +32,14 @@ namespace ZenDays.Service.Services
 
 		public async Task<ResultViewModel> DisableDepartamento(string id)
 		{
-			var result = await Get(id);
-			if (result.Data == null) return new ResultViewModel(null, 404, false, ErrorMessages.NotFound);
-			result.Data.Ativo = false;
-			var json = JsonConvert.SerializeObject(result.Data);
+			var result = await _departamentoRepository.Get(id);
+			if (result == null) return new ResultViewModel(null, 404, false, ErrorMessages.NotFound);
+			if (result.Nome == "ADM") return new ResultViewModel(null, 403, false, ErrorMessages.Forbidden);
+			var vinculoDepartamento = await _userRepository.GetByDepartamento(id);
+			if (vinculoDepartamento != null) return new ResultViewModel(null, 403, false, ErrorMessages.Forbidden);
+
+			result.Ativo = false;
+			var json = JsonConvert.SerializeObject(result);
 			var desativaDepartamento = JsonConvert.DeserializeObject<Dictionary<string, object>>(json);
 			if (desativaDepartamento == null) return new ResultViewModel(null, 400, false, ErrorMessages.SerializationFailed);
 			var resultDisable = await Disable(desativaDepartamento, id);
@@ -49,6 +55,10 @@ namespace ZenDays.Service.Services
 
 		public async Task<ResultViewModel> UpdateDepartamento(DepartamentoDTO obj)
 		{
+			var resultId = await _departamentoRepository.Get(obj.Id);
+			if (resultId == null) return new ResultViewModel(null, 404, false, ErrorMessages.NotFound);
+			if (resultId.Nome == "ADM") return new ResultViewModel(null, 403, false, ErrorMessages.Forbidden);
+
 			var depNameExists = await _departamentoRepository.GetByName(obj.Nome);
 			if (depNameExists != null && depNameExists.Id != obj.Id) return new ResultViewModel(null, 404, false, ErrorMessages.DepAlreadyExists);
 			var json = JsonConvert.SerializeObject(obj);
