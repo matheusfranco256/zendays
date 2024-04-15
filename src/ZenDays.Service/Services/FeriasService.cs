@@ -96,7 +96,7 @@ namespace ZenDays.Service.Services
 			var fromdb = await _feriasRepository.GetAllFerias(userId, status);
 			return fromdb.Count == 0 ? new ResultViewModel(null, 404, false, ErrorMessages.NotFound) : new ResultViewModel(_mapper.Map<List<FeriasDTO>>(fromdb), 200, true, SuccessMessages.Found);
 		}
-		public async Task<ResultViewModel> GetAllFeriasByDepartamento(string departamentoId, string? status)
+		public async Task<ResultViewModel> GetAllFeriasByDepartamento(string? departamentoId, string? status)
 		{
 			var fromdb = await _feriasRepository.GetAllFeriasByDepartamento(departamentoId, status);
 			return fromdb.Count == 0 ? new ResultViewModel(null, 404, false, ErrorMessages.NotFound) : new ResultViewModel(_mapper.Map<List<FeriasDTO>>(fromdb), 200, true, SuccessMessages.Found);

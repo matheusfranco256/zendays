@@ -42,19 +42,21 @@ namespace ZenDays.Infra.Repositories
 			return entitys;
 		}
 
-		public async Task<List<Ferias>> GetAllFeriasByDepartamento(string idDepartamento, string? status)
+		public async Task<List<Ferias>> GetAllFeriasByDepartamento(string? idDepartamento, string? status)
 		{
-			//.WhereEqualTo(FieldPath.DocumentId, id)
-			//usuarios com o Id do departamento
-			var usuariosQuery = _fireStoreDb.Collection("Usuario")
-				.WhereEqualTo("IdDepartamento", idDepartamento);
-			var usuariosSnapshot = await usuariosQuery.GetSnapshotAsync();
-			var idsUsuarios = usuariosSnapshot.Documents.Select(doc => doc.Id).ToList();
+			Query feriasQuery = _fireStoreDb.Collection("ferias");
+			if (!string.IsNullOrEmpty(idDepartamento))
+			{
 
-			//ferias dos usuarios filtrados
-			var feriasQuery = _fireStoreDb.Collection("ferias")
-				.WhereIn("IdUsuario", idsUsuarios);
+				//usuarios com o Id do departamento
+				var usuariosQuery = _fireStoreDb.Collection("Usuario")
+					.WhereEqualTo("IdDepartamento", idDepartamento);
+				var usuariosSnapshot = await usuariosQuery.GetSnapshotAsync();
+				var idsUsuarios = usuariosSnapshot.Documents.Select(doc => doc.Id).ToList();
 
+				//ferias dos usuarios filtrados
+				feriasQuery = feriasQuery.WhereIn("IdUsuario", idsUsuarios);
+			}
 			if (!string.IsNullOrEmpty(status)) feriasQuery = feriasQuery.WhereEqualTo("Status", status);
 
 			var feriasSnapshot = await feriasQuery.GetSnapshotAsync();

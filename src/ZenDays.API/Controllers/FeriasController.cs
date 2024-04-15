@@ -37,7 +37,7 @@ namespace ZenDays.API.Controllers
 		public async Task<IActionResult> GetAll([FromQuery] string? userId, string? status) => Result(await _feriasService.GetAllFerias(userId, status));
 		[HttpGet]
 		[Route("departamento")]
-		public async Task<IActionResult> GetAllByDepartamento([FromQuery][Required] string idDepartamento, string? status) => Result(await _feriasService.GetAllFeriasByDepartamento(idDepartamento, status));
+		public async Task<IActionResult> GetAllByDepartamento([FromQuery] string? idDepartamento, string? status) => Result(await _feriasService.GetAllFeriasByDepartamento(idDepartamento, status));
 		[HttpGet]
 		[Route("tipoUsuario")]
 		public async Task<IActionResult> GetAllByTipoUsuario([FromQuery][Required] string tipoUsuario, string? status) => Result(await _feriasService.GetAllFeriasByTipoUsuario(tipoUsuario, status));
