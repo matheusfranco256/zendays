@@ -7,6 +7,7 @@ using ZenDays.Domain.Entities;
 using ZenDays.Infra.Interfaces;
 using ZenDays.Service.DTO;
 using ZenDays.Service.Interfaces;
+using ZenDays.Service.Models;
 
 namespace ZenDays.Service.Services
 {
@@ -22,17 +23,34 @@ namespace ZenDays.Service.Services
 			_userRepository = userRepository;
 		}
 
-		public async Task<ResultViewModel> CreateFerias(FeriasDTO obj)
+		public async Task<ResultViewModel> CreateFerias(CadastraFeriasInputModel obj)
 		{
 			var usuario = await _userService.Get(obj.IdUsuario);
 			if (usuario.Data == null) return new ResultViewModel(null, 404, false, ErrorMessages.NotFound);
 
 
-			var diferencaEmMilissegundos = DateTime.Parse(obj.DataInicio) - DateTime.Parse(obj.DataFim);
-			var qtdeDias = diferencaEmMilissegundos.TotalDays;
+			var diferenca = DateTime.Parse(obj.DataFim) - DateTime.Parse(obj.DataInicio);
+			var qtdeDias = diferenca.TotalDays;
 
-			if (usuario.Data.SaldoFerias < qtdeDias) return new ResultViewModel(null, 400, false, ErrorMessages.BadRequest);
-			var json = JsonConvert.SerializeObject(obj);
+			if (usuario.Data.SaldoFerias < qtdeDias) return new ResultViewModel(null, 400, false, "Saldo de ferias insuficiente.");
+
+			var diferencaInicio = DateTime.Parse(obj.DataInicio) - DateTime.Now;
+			if (diferencaInicio.TotalDays < 31) return new ResultViewModel(null, 400, false, "um mês de antecedência da data em que quer começar as férias.");
+
+			var dto = new FeriasDTO
+			{
+				Ativo = true,
+				DataInicio = obj.DataInicio,
+				DataFim = obj.DataFim,
+				DataPedido = DateTime.Now.ToString("d"),
+				DataValidacao = "",
+				DiasVendidos = obj.DiasVendidos,
+				IdUsuario = obj.IdUsuario,
+				Mensagem = obj.Mensagem,
+				Status = 0
+			};
+
+			var json = JsonConvert.SerializeObject(dto);
 			var insereFerias = JsonConvert.DeserializeObject<Dictionary<string, object>>(json);
 			if (insereFerias == null) return new ResultViewModel(null, 400, false, ErrorMessages.SerializationFailed);
 			var result = await Create(insereFerias);

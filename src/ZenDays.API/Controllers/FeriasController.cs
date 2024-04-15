@@ -6,6 +6,7 @@ using ZenDays.Core.Models;
 using ZenDays.Core.Utilities;
 using ZenDays.Service.DTO;
 using ZenDays.Service.Interfaces;
+using ZenDays.Service.Models;
 
 namespace ZenDays.API.Controllers
 {
@@ -24,7 +25,7 @@ namespace ZenDays.API.Controllers
 		}
 
 		[HttpPost("Register")]
-		public async Task<IActionResult> Register([FromBody] RegisterFeriasViewModel model) => Result(await _feriasService.CreateFerias(_mapper.Map<FeriasDTO>(model)));
+		public async Task<IActionResult> Register([FromBody] CadastraFeriasInputModel model) => Result(await _feriasService.CreateFerias(model));
 
 		[HttpPut("Update")]
 		public async Task<IActionResult> Update([FromBody] UpdateFeriasViewModel model) => Result(await _feriasService.UpdateFerias(_mapper.Map<FeriasDTO>(model)));
