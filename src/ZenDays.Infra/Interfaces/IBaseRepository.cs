@@ -7,7 +7,9 @@ namespace ZenDays.Infra.Interfaces
 		Task<T?> Create(Dictionary<string, object> obj);
 		Task<T?> Update(Dictionary<string, object> obj, string id);
 		Task Disable(Dictionary<string, object> obj, string id);
-		Task<List<T>> GetAll();
+        Task Delete(Dictionary<string, object> obj, string id);
+        Task DeleteFromFirebaseAuth(string uid);
+        Task<List<T>> GetAll();
 		Task<List<T>> GetAll(List<(string field, string value)> filtros);
 
 		Task<T?> Get(string id, bool isEnabled = true);

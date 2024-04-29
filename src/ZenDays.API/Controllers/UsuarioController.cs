@@ -50,7 +50,7 @@ namespace ZenDays.API.Controllers
 			return Result(new ResultViewModel(null, 200, true));
 		}
 
-		[HttpDelete("Disable")]
-		public async Task<IActionResult> Delete(string id) => Result(await _userService.DisableUser(id));
+		[HttpDelete("Delete")]
+		public async Task<IActionResult> Delete(string id) => Result(await _userService.DeleteUser(id));
 	}
 }
