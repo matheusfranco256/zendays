@@ -36,8 +36,7 @@ namespace ZenDays.Domain.Entities
         public string UltimaVerificacao { get; set; }
         [FirestoreProperty("FinalPeriodoAquisitivo")]
         public string FinalPeriodoAquisitivo { get; set; }
-
-        public Usuario(string nome, string cPF, string? endereco, double salario, string? telefone, string dataNascimento, string ultimasFerias, string email, string senha, string idDepartamento, string cargo, int tipoUsuario, string dataCadastro, int saldoFerias, string ultimaVerificacao, string finalPeriodoAquisitivo)
+        public Usuario(string nome, string cPF, string? endereco, double salario, string? telefone, string dataNascimento, string ultimasFerias, string email, string senha, string idDepartamento, string cargo, int tipoUsuario, string dataCadastro, int saldoFerias, string ultimaVerificacao, string finalPeriodoAquisitivo, string uID)
         {
             Nome = nome;
             CPF = cPF;
@@ -55,7 +54,6 @@ namespace ZenDays.Domain.Entities
             SaldoFerias = saldoFerias;
             UltimaVerificacao = ultimaVerificacao;
             FinalPeriodoAquisitivo = finalPeriodoAquisitivo;
-
         }
     }
 }
