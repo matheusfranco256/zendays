@@ -10,7 +10,9 @@ namespace ZenDays.Service.Interfaces
 		 where J : BaseDTO
 	{
 		Task<ResultViewModel> Disable(Dictionary<string, object> obj, string id);
-		Task<ResultViewModel> Enable(Dictionary<string, object> obj, string id);
+        Task<ResultViewModel> Delete(Dictionary<string, object> obj, string id);
+        Task<ResultViewModel> DeleteFromFirebaseAuth(string uid);
+        Task<ResultViewModel> Enable(Dictionary<string, object> obj, string id);
 		Task<ResultViewModel> Create(Dictionary<string, object> obj);
 		Task<ResultViewModel> Update(Dictionary<string, object> obj, string id);
 		Task<ResultViewModel> GetAll();

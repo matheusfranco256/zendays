@@ -31,12 +31,26 @@ namespace ZenDays.Service.Services
 				return new ResultViewModel(null, 400, false, ex.Message);
 			}
 		}
-		public async Task<ResultViewModel> Disable(Dictionary<string, object> obj, string id)
+
+        
+
+        public async Task<ResultViewModel> Disable(Dictionary<string, object> obj, string id)
 		{
 			await _baseRepository.Disable(obj, id);
 			return new ResultViewModel(null, 200, true, SuccessMessages.Removed);
 		}
-		public Task<ResultViewModel> Enable(Dictionary<string, object> obj, string id)
+        public async Task<ResultViewModel> Delete(Dictionary<string, object> obj, string id)
+        {
+            await _baseRepository.Delete(obj, id);
+            return new ResultViewModel(null, 200, true, SuccessMessages.Removed);
+        }
+
+        public async Task<ResultViewModel> DeleteFromFirebaseAuth(string uid)
+        {
+            await _baseRepository.DeleteFromFirebaseAuth(uid);
+            return new ResultViewModel(null, 200, true, SuccessMessages.Removed);
+        }
+        public Task<ResultViewModel> Enable(Dictionary<string, object> obj, string id)
 		{
 			throw new NotImplementedException();
 		}
@@ -69,5 +83,7 @@ namespace ZenDays.Service.Services
 				return new ResultViewModel(null, 400, false, ex.Message);
 			}
 		}
-	}
+
+        
+    }
 }

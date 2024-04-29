@@ -11,6 +11,7 @@ namespace ZenDays.Service.Interfaces
 		Task<ResultViewModel> CreateUser(UsuarioDTO obj);
 		Task<ResultViewModel> UpdateUser(UsuarioDTO obj);
 		Task<ResultViewModel> DisableUser(string id);
-		Task VerificaFerias();
+        Task<ResultViewModel> DeleteUser(string id);
+        Task VerificaFerias();
 	}
 }
