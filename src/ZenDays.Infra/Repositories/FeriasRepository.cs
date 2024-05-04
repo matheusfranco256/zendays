@@ -12,12 +12,13 @@ namespace ZenDays.Infra.Repositories
 		public FeriasRepository(IConfiguration configuration, IHostingEnvironment environment) : base(configuration, environment)
 		{
 		}
-		public async Task<List<Ferias>> GetAllFerias(string? userId, string? tipoUsuario, string? idDepartamento, string? idUsuarioExcluir, string? status)
+		public async Task<List<Ferias>> GetAllFerias(string? userId, string? tipoUsuario, string? idDepartamento, string? idUsuarioExcluir, string? status, string? tipoUsuarioExcluir)
 		{
 			var usuariosQuery = _fireStoreDb.Collection(typeof(Usuario).Name).WhereNotEqualTo("Nome", "");
 
 			if (!string.IsNullOrEmpty(idDepartamento)) usuariosQuery = usuariosQuery.WhereEqualTo("IdDepartamento", idDepartamento);
 			if (!string.IsNullOrEmpty(tipoUsuario)) usuariosQuery = usuariosQuery.WhereEqualTo("TipoUsuario", int.Parse(tipoUsuario));
+			if (!string.IsNullOrEmpty(tipoUsuarioExcluir)) usuariosQuery = usuariosQuery.WhereNotEqualTo("TipoUsuario", int.Parse(tipoUsuarioExcluir));
 
 			var usuariosSnapshot = await usuariosQuery.GetSnapshotAsync();
 			var idsUsuarios = usuariosSnapshot.Documents.Select(doc => doc.Id).ToList();

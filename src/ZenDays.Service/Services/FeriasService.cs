@@ -31,10 +31,10 @@ namespace ZenDays.Service.Services
 			if (usuario.Data == null) return new ResultViewModel(null, 404, false, ErrorMessages.NotFound);
 			var departamento = await _departamentoRepository.Get(usuario.Data.IdDepartamento);
 
-			var diferenca = DateTime.Parse(obj.DataFim) - DateTime.Parse(obj.DataInicio);
-			var qtdeDias = diferenca.TotalDays;
+			//var diferenca = DateTime.Parse(obj.DataFim) - DateTime.Parse(obj.DataInicio);
+			//var qtdeDias = diferenca.TotalDays;
 
-			if (usuario.Data.SaldoFerias < qtdeDias) return new ResultViewModel(null, 400, false, "Saldo de ferias insuficiente.");
+			//if (usuario.Data.SaldoFerias < qtdeDias) return new ResultViewModel(null, 400, false, "Saldo de ferias insuficiente.");
 
 			var diferencaInicio = DateTime.Parse(obj.DataInicio) - DateTime.Now;
 			if (diferencaInicio.TotalDays < 31) return new ResultViewModel(null, 400, false, "um mês de antecedência da data em que quer começar as férias.");
@@ -102,9 +102,11 @@ namespace ZenDays.Service.Services
 				var usuario = await _userRepository.Get(feriasOld.IdUsuario);
 				if (usuario != null)
 				{
-					var diferencaEmMilissegundos = Util.ConvertToDateTime(feriasOld.DataInicio, "/") - Util.ConvertToDateTime(feriasOld.DataFim, "/");
+					var diferencaEmMilissegundos = Util.ConvertToDateTime(feriasOld.DataInicio, ".") - Util.ConvertToDateTime(feriasOld.DataFim, ".");
 					int qtdeDias = (int)diferencaEmMilissegundos.TotalDays;
-					usuario.SaldoFerias -= qtdeDias;
+
+					if (usuario.SaldoFerias < qtdeDias) return new ResultViewModel(null, 400, false, "Saldo de ferias insuficiente.");
+					else usuario.SaldoFerias -= qtdeDias;
 
 					var jsonUsuario = JsonConvert.SerializeObject(usuario);
 					var atualizaUsuario = JsonConvert.DeserializeObject<Dictionary<string, object>>(jsonUsuario);
@@ -118,14 +120,14 @@ namespace ZenDays.Service.Services
 			return resultUpdate.Success ? new ResultViewModel(null, 200, true) : resultUpdate;
 
 		}
-		public async Task<ResultViewModel> GetAllFerias(string? userId, string? tipoUsuario, string? idDepartamento, string? idUsuario, string? dataInicio, string? dataFim, string? status)
+		public async Task<ResultViewModel> GetAllFerias(string? userId, string? tipoUsuario, string? idDepartamento, string? idUsuario, string? dataInicio, string? dataFim, string? status, string? tipoUsuarioExcluir)
 		{
 			var fromdb = await _feriasRepository.GetAllFerias(userId, tipoUsuario, idDepartamento, idUsuario, status);
 
 
 			if (!string.IsNullOrEmpty(dataInicio) && !string.IsNullOrEmpty(dataFim))
 			{
-				fromdb = fromdb.Where(x => Util.ConvertToDateTime(x.DataPedido, "/").Date >= Util.ConvertToDateTime(dataInicio, "/").Date && Util.ConvertToDateTime(x.DataPedido, "/").Date <= Util.ConvertToDateTime(dataFim, "/").Date).ToList();
+				fromdb = fromdb.Where(x => Util.ConvertToDateTime(x.DataPedido, ".").Date >= Util.ConvertToDateTime(dataInicio, ".").Date && Util.ConvertToDateTime(x.DataPedido, ".").Date <= Util.ConvertToDateTime(dataFim, ".").Date).ToList();
 			}
 			return fromdb.Count == 0 ? new ResultViewModel(null, 404, false, ErrorMessages.NotFound) : new ResultViewModel(_mapper.Map<List<FeriasDTO>>(fromdb), 200, true, SuccessMessages.Found);
 		}

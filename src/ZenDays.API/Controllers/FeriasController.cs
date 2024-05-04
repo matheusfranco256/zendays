@@ -34,7 +34,7 @@ namespace ZenDays.API.Controllers
 
 
 		[HttpGet]
-		public async Task<IActionResult> GetAll([FromQuery] string? userId, string? tipoUsuario, string? idDepartamento, string? idUsuarioExcluir, string? dataInicio, string? dataFim, string? status) => Result(await _feriasService.GetAllFerias(userId, tipoUsuario, idDepartamento, idUsuarioExcluir, dataInicio, dataFim, status));
+		public async Task<IActionResult> GetAll([FromQuery] string? userId, string? tipoUsuario, string? idDepartamento, string? idUsuarioExcluir, string? dataInicio, string? dataFim, string? status, string? tipoUsuarioExcluir) => Result(await _feriasService.GetAllFerias(userId, tipoUsuario, idDepartamento, idUsuarioExcluir, dataInicio, dataFim, status, tipoUsuarioExcluir));
 
 		[HttpDelete("Delete")]
 		public async Task<IActionResult> Delete(string id) => Result(await _feriasService.DeleteFerias(id));
