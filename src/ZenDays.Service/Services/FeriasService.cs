@@ -56,15 +56,15 @@ namespace ZenDays.Service.Services
 			var result = await Create(insereFerias);
 			return result.Success ? new ResultViewModel(null, 201, true) : result;
 		}
-		public async Task<ResultViewModel> DisableFerias(string id)
+		public async Task<ResultViewModel> DeleteFerias(string id)
 		{
 			var result = await Get(id);
 			if (result.Data == null) return new ResultViewModel(null, 404, false, ErrorMessages.NotFound);
 			result.Data.Ativo = false;
 			var json = JsonConvert.SerializeObject(result.Data);
-			var desativaFerias = JsonConvert.DeserializeObject<Dictionary<string, object>>(json);
-			if (desativaFerias == null) return new ResultViewModel(null, 400, false, ErrorMessages.SerializationFailed);
-			await Disable(desativaFerias, id);
+			var deletaFerias = JsonConvert.DeserializeObject<Dictionary<string, object>>(json);
+			if (deletaFerias == null) return new ResultViewModel(null, 400, false, ErrorMessages.SerializationFailed);
+			await Delete(deletaFerias, id);
 			return new ResultViewModel(null, 200, true);
 		}
 		public async Task<ResultViewModel> UpdateFerias(FeriasDTO obj)

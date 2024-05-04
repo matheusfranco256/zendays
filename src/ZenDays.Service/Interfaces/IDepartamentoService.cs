@@ -9,6 +9,6 @@ namespace ZenDays.Service.Interfaces
 		Task<ResultViewModel> GetByName(string name);
 		Task<ResultViewModel> CreateDepartamento(DepartamentoDTO obj);
 		Task<ResultViewModel> UpdateDepartamento(DepartamentoDTO obj);
-		Task<ResultViewModel> DisableDepartamento(string id);
+		Task<ResultViewModel> DeleteDepartamento(string id);
 	}
 }

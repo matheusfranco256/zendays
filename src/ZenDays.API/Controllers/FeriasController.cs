@@ -43,8 +43,8 @@ namespace ZenDays.API.Controllers
 		[Route("tipoUsuario")]
 		public async Task<IActionResult> GetAllByTipoUsuario([FromQuery][Required] string tipoUsuario, string? status) => Result(await _feriasService.GetAllFeriasByTipoUsuario(tipoUsuario, status));
 
-		[HttpDelete("Disable")]
-		public async Task<IActionResult> Delete(string id) => Result(await _feriasService.DisableFerias(id));
+		[HttpDelete("Delete")]
+		public async Task<IActionResult> Delete(string id) => Result(await _feriasService.DeleteFerias(id));
 
 		[HttpPatch("Status")]
 		public async Task<IActionResult> Status(string id, Enumerators.Status status) => Result(await _feriasService.UpdateStatus(id, status));
