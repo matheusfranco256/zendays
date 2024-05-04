@@ -122,7 +122,7 @@ namespace ZenDays.Service.Services
 		}
 		public async Task<ResultViewModel> GetAllFerias(string? userId, string? tipoUsuario, string? idDepartamento, string? idUsuario, string? dataInicio, string? dataFim, string? status, string? tipoUsuarioExcluir)
 		{
-			var fromdb = await _feriasRepository.GetAllFerias(userId, tipoUsuario, idDepartamento, idUsuario, status);
+			var fromdb = await _feriasRepository.GetAllFerias(userId, tipoUsuario, idDepartamento, idUsuario, status, tipoUsuarioExcluir);
 
 
 			if (!string.IsNullOrEmpty(dataInicio) && !string.IsNullOrEmpty(dataFim))
