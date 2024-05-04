@@ -36,7 +36,7 @@ namespace ZenDays.API.Controllers
 		[HttpGet("GetAll")]
 		public async Task<IActionResult> GetAll() => Result(await _departamentoService.GetAll());
 
-		[HttpDelete("Disable")]
-		public async Task<IActionResult> Delete(string id) => Result(await _departamentoService.DisableDepartamento(id));
+		[HttpDelete("Delete")]
+		public async Task<IActionResult> Delete(string id) => Result(await _departamentoService.DeleteDepartamento(id));
 	}
 }

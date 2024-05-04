@@ -12,79 +12,14 @@ namespace ZenDays.Infra.Repositories
 		public FeriasRepository(IConfiguration configuration, IHostingEnvironment environment) : base(configuration, environment)
 		{
 		}
-
-		public async Task<List<Ferias>> GetAllFerias(string? userId, string? status)
+		public async Task<List<Ferias>> GetAllFerias(string? userId, string? tipoUsuario, string? idDepartamento, string? idUsuarioExcluir, string? status, string? tipoUsuarioExcluir)
 		{
-			Query query = _fireStoreDb.Collection(typeof(Ferias).Name);
+			var usuariosQuery = _fireStoreDb.Collection(typeof(Usuario).Name).WhereNotEqualTo("Nome", "");
 
-			if (!string.IsNullOrEmpty(userId)) query = query.WhereEqualTo("IdUsuario", userId);
-			if (!string.IsNullOrEmpty(status)) query = query.WhereEqualTo("Status", int.Parse(status));
+			if (!string.IsNullOrEmpty(idDepartamento)) usuariosQuery = usuariosQuery.WhereEqualTo("IdDepartamento", idDepartamento);
+			if (!string.IsNullOrEmpty(tipoUsuario)) usuariosQuery = usuariosQuery.WhereEqualTo("TipoUsuario", int.Parse(tipoUsuario));
+			if (!string.IsNullOrEmpty(tipoUsuarioExcluir)) usuariosQuery = usuariosQuery.WhereNotEqualTo("TipoUsuario", int.Parse(tipoUsuarioExcluir));
 
-
-
-			QuerySnapshot QuerySnapshot = await query.GetSnapshotAsync();
-			List<Ferias> entitys = new();
-
-			foreach (DocumentSnapshot documentSnapshot in QuerySnapshot.Documents)
-			{
-				if (documentSnapshot.Exists)
-				{
-					Dictionary<string, object> entity = documentSnapshot.ToDictionary();
-					string json = JsonConvert.SerializeObject(entity);
-					var newEntity = JsonConvert.DeserializeObject<Ferias>(json);
-					if (newEntity != null)
-					{
-						newEntity.Id = documentSnapshot.Id;
-						entitys.Add(newEntity);
-					}
-				}
-			}
-			return entitys;
-		}
-
-		public async Task<List<Ferias>> GetAllFeriasByDepartamento(string? idDepartamento, string? status)
-		{
-			Query feriasQuery = _fireStoreDb.Collection(typeof(Ferias).Name);
-			if (!string.IsNullOrEmpty(idDepartamento))
-			{
-
-				//usuarios com o Id do departamento
-				var usuariosQuery = _fireStoreDb.Collection(typeof(Usuario).Name)
-					.WhereEqualTo("IdDepartamento", idDepartamento);
-				var usuariosSnapshot = await usuariosQuery.GetSnapshotAsync();
-				var idsUsuarios = usuariosSnapshot.Documents.Select(doc => doc.Id).ToList();
-
-				if (idsUsuarios.Count() == 0) return new List<Ferias>();
-				//ferias dos usuarios filtrados
-				feriasQuery = feriasQuery.WhereIn("IdUsuario", idsUsuarios);
-			}
-			if (!string.IsNullOrEmpty(status)) feriasQuery = feriasQuery.WhereEqualTo("Status", int.Parse(status));
-
-			var feriasSnapshot = await feriasQuery.GetSnapshotAsync();
-			List<Ferias> entitys = new();
-
-			foreach (DocumentSnapshot documentSnapshot in feriasSnapshot.Documents)
-			{
-				if (documentSnapshot.Exists)
-				{
-					Dictionary<string, object> entity = documentSnapshot.ToDictionary();
-					string json = JsonConvert.SerializeObject(entity);
-					var newEntity = JsonConvert.DeserializeObject<Ferias>(json);
-					if (newEntity != null)
-					{
-						newEntity.Id = documentSnapshot.Id;
-						entitys.Add(newEntity);
-					}
-				}
-			}
-			return entitys;
-		}
-
-		public async Task<List<Ferias>> GetAllFeriasByTipoUsuario(string tipoUsuario, string? status)
-		{
-			//usuarios com o Id do departamento
-			var usuariosQuery = _fireStoreDb.Collection(typeof(Usuario).Name)
-				.WhereEqualTo("TipoUsuario", int.Parse(tipoUsuario));
 			var usuariosSnapshot = await usuariosQuery.GetSnapshotAsync();
 			var idsUsuarios = usuariosSnapshot.Documents.Select(doc => doc.Id).ToList();
 
@@ -94,6 +29,8 @@ namespace ZenDays.Infra.Repositories
 				.WhereIn("IdUsuario", idsUsuarios);
 
 			if (!string.IsNullOrEmpty(status)) feriasQuery = feriasQuery.WhereEqualTo("Status", int.Parse(status));
+			if (!string.IsNullOrEmpty(idUsuarioExcluir)) feriasQuery = feriasQuery.WhereNotEqualTo("IdUsuario", idUsuarioExcluir);
+			if (!string.IsNullOrEmpty(userId)) feriasQuery = feriasQuery.WhereEqualTo("IdUsuario", userId);
 
 			var feriasSnapshot = await feriasQuery.GetSnapshotAsync();
 			List<Ferias> entitys = new();
@@ -114,6 +51,5 @@ namespace ZenDays.Infra.Repositories
 			}
 			return entitys;
 		}
-
 	}
 }

@@ -30,7 +30,7 @@ namespace ZenDays.Service.Services
 			return new ResultViewModel(null, 201, true);
 		}
 
-		public async Task<ResultViewModel> DisableDepartamento(string id)
+		public async Task<ResultViewModel> DeleteDepartamento(string id)
 		{
 			var result = await _departamentoRepository.Get(id);
 			if (result == null) return new ResultViewModel(null, 404, false, ErrorMessages.NotFound);
@@ -40,9 +40,9 @@ namespace ZenDays.Service.Services
 
 			result.Ativo = false;
 			var json = JsonConvert.SerializeObject(result);
-			var desativaDepartamento = JsonConvert.DeserializeObject<Dictionary<string, object>>(json);
-			if (desativaDepartamento == null) return new ResultViewModel(null, 400, false, ErrorMessages.SerializationFailed);
-			var resultDisable = await Disable(desativaDepartamento, id);
+			var deletaDepartamemto = JsonConvert.DeserializeObject<Dictionary<string, object>>(json);
+			if (deletaDepartamemto == null) return new ResultViewModel(null, 400, false, ErrorMessages.SerializationFailed);
+			var resultDisable = await Delete(deletaDepartamemto, id);
 
 			return resultDisable.Success ? new ResultViewModel(null, 200, true) : resultDisable;
 		}

@@ -15,7 +15,6 @@ namespace ZenDays.Infra.Repositories
 	{
 		protected FirestoreDb _fireStoreDb;
 		private readonly IConfiguration _configuration;
-		private IHostingEnvironment _environment;
 
 
 		public BaseRepository(IConfiguration configuration, IHostingEnvironment environment)
@@ -166,49 +165,49 @@ namespace ZenDays.Infra.Repositories
 			return;
 		}
 
-        public async Task Delete(Dictionary<string, object> obj, string id)
-        {
-            DocumentSnapshot? documentSnapshot = null!;
+		public async Task Delete(Dictionary<string, object> obj, string id)
+		{
+			DocumentSnapshot? documentSnapshot = null!;
 			Query query = _fireStoreDb.Collection(typeof(T).Name)
 				.WhereEqualTo(FieldPath.DocumentId, id);
-            QuerySnapshot? snapshot = await query.GetSnapshotAsync();
-            documentSnapshot = snapshot.Documents.FirstOrDefault();
+			QuerySnapshot? snapshot = await query.GetSnapshotAsync();
+			documentSnapshot = snapshot.Documents.FirstOrDefault();
 
-            if (documentSnapshot != null)
-            {
-                await documentSnapshot.Reference.DeleteAsync();
-                var entity = JsonConvert.DeserializeObject<T?>(JsonConvert.SerializeObject(obj));
-                if (entity == null) return;
-                entity.Id = documentSnapshot.Id;
-                return;
-            }
-            return;
-        }
+			if (documentSnapshot != null)
+			{
+				await documentSnapshot.Reference.DeleteAsync();
+				var entity = JsonConvert.DeserializeObject<T?>(JsonConvert.SerializeObject(obj));
+				if (entity == null) return;
+				entity.Id = documentSnapshot.Id;
+				return;
+			}
+			return;
+		}
 
-        public async Task DeleteFromFirebaseAuth(string uid)
-        {
-            // Initialize Firebase Admin SDK
-            GoogleCredential googleCredential = GoogleCredential.GetApplicationDefault();
+		public async Task DeleteFromFirebaseAuth(string uid)
+		{
+			// Initialize Firebase Admin SDK
+			GoogleCredential googleCredential = GoogleCredential.GetApplicationDefault();
 
-            FirestoreClientBuilder builder = new FirestoreClientBuilder
-            {
-                ChannelCredentials = googleCredential.ToChannelCredentials()
-            };
+			FirestoreClientBuilder builder = new FirestoreClientBuilder
+			{
+				ChannelCredentials = googleCredential.ToChannelCredentials()
+			};
 
-            // Replace with the user's UID you want to delete
-         
+			// Replace with the user's UID you want to delete
 
-            // Remove the user from Firebase Authentication
-            try
-            {
-               await FirebaseAuth.DefaultInstance.DeleteUserAsync(uid);
-            }
-            catch (FirebaseAuthException e)
-            {
-                Console.WriteLine($"Error deleting user: {e.Message}");
-            }
-        }
-    }
+
+			// Remove the user from Firebase Authentication
+			try
+			{
+				await FirebaseAuth.DefaultInstance.DeleteUserAsync(uid);
+			}
+			catch (FirebaseAuthException e)
+			{
+				Console.WriteLine($"Error deleting user: {e.Message}");
+			}
+		}
+	}
 
 }
 

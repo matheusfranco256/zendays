@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ZenDays.Core.Models;
@@ -33,18 +32,12 @@ namespace ZenDays.API.Controllers
 		[HttpGet("GetById")]
 		public async Task<IActionResult> Get(string id) => Result(await _feriasService.Get(id));
 
-		[HttpGet]
-		[Route("usuario")]
-		public async Task<IActionResult> GetAll([FromQuery] string? userId, string? status) => Result(await _feriasService.GetAllFerias(userId, status));
-		[HttpGet]
-		[Route("departamento")]
-		public async Task<IActionResult> GetAllByDepartamento([FromQuery] string? idDepartamento, string? status) => Result(await _feriasService.GetAllFeriasByDepartamento(idDepartamento, status));
-		[HttpGet]
-		[Route("tipoUsuario")]
-		public async Task<IActionResult> GetAllByTipoUsuario([FromQuery][Required] string tipoUsuario, string? status) => Result(await _feriasService.GetAllFeriasByTipoUsuario(tipoUsuario, status));
 
-		[HttpDelete("Disable")]
-		public async Task<IActionResult> Delete(string id) => Result(await _feriasService.DisableFerias(id));
+		[HttpGet]
+		public async Task<IActionResult> GetAll([FromQuery] string? userId, string? tipoUsuario, string? idDepartamento, string? idUsuarioExcluir, string? dataInicio, string? dataFim, string? status, string? tipoUsuarioExcluir) => Result(await _feriasService.GetAllFerias(userId, tipoUsuario, idDepartamento, idUsuarioExcluir, dataInicio, dataFim, status, tipoUsuarioExcluir));
+
+		[HttpDelete("Delete")]
+		public async Task<IActionResult> Delete(string id) => Result(await _feriasService.DeleteFerias(id));
 
 		[HttpPatch("Status")]
 		public async Task<IActionResult> Status(string id, Enumerators.Status status) => Result(await _feriasService.UpdateStatus(id, status));
