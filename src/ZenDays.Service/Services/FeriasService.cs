@@ -73,8 +73,11 @@ namespace ZenDays.Service.Services
 			if (usuario.Data == null) return new ResultViewModel(null, 404, false, ErrorMessages.NotFound);
 			var feriasOld = await _feriasRepository.Get(obj.Id);
 			if (feriasOld == null) return new ResultViewModel(null, 404, false, ErrorMessages.NotFound);
-			obj.Status = feriasOld.Status;
-			var json = JsonConvert.SerializeObject(obj);
+			obj.DataValidacao = feriasOld.DataValidacao;
+			obj.DataPedido = feriasOld.DataPedido;
+			obj.IdUsuario = feriasOld.IdUsuario;
+            obj.Status = feriasOld.Status;
+            var json = JsonConvert.SerializeObject(obj);
 			var atualizaFerias = JsonConvert.DeserializeObject<Dictionary<string, object>>(json);
 			if (atualizaFerias == null) return new ResultViewModel(null, 400, false, ErrorMessages.SerializationFailed);
 			var resultUpdate = await Update(atualizaFerias, obj.Id);
