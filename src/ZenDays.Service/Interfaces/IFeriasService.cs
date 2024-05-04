@@ -11,8 +11,7 @@ namespace ZenDays.Service.Interfaces
 		Task<ResultViewModel> CreateFerias(CadastraFeriasInputModel obj);
 		Task<ResultViewModel> UpdateFerias(FeriasDTO obj);
 		Task<ResultViewModel> DeleteFerias(string id);
-		Task<ResultViewModel> GetAllFerias(string? userId, string? status);
-		Task<ResultViewModel> GetAllFeriasByTipoUsuario(string? tipoUsuario, string? idDepartamento, string? idUsuario, string? dataInicio, string? dataFim, string? status);
+		Task<ResultViewModel> GetAllFerias(string? userId, string? tipoUsuario, string? idDepartamento, string? idUsuario, string? dataInicio, string? dataFim, string? status);
 		Task<ResultViewModel> UpdateStatus(string id, Enumerators.Status status);
 	}
 }

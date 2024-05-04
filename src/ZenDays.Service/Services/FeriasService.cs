@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Newtonsoft.Json;
-using System.Globalization;
 using ZenDays.Core.Messages;
 using ZenDays.Core.Models;
 using ZenDays.Core.Utilities;
@@ -50,7 +49,7 @@ namespace ZenDays.Service.Services
 				DiasVendidos = obj.DiasVendidos,
 				IdUsuario = obj.IdUsuario,
 				NomeUsuario = usuario.Data.Nome,
-				NomeDepartamento = departamento != null && departamento!.Nome != null ? departamento!.Nome.ToString() : "" ,
+				NomeDepartamento = departamento != null && departamento!.Nome != null ? departamento!.Nome.ToString() : "",
 				Mensagem = obj.Mensagem,
 				Status = 0
 			};
@@ -76,15 +75,15 @@ namespace ZenDays.Service.Services
 		{
 			var feriasOld = await _feriasRepository.Get(obj.Id);
 			if (feriasOld == null) return new ResultViewModel(null, 404, false, ErrorMessages.NotFound);
-            var usuario = await _userService.Get(feriasOld.IdUsuario);
-            if (usuario.Data == null) return new ResultViewModel(null, 404, false, ErrorMessages.NotFound);
-            obj.DataValidacao = feriasOld.DataValidacao;
+			var usuario = await _userService.Get(feriasOld.IdUsuario);
+			if (usuario.Data == null) return new ResultViewModel(null, 404, false, ErrorMessages.NotFound);
+			obj.DataValidacao = feriasOld.DataValidacao;
 			obj.DataPedido = feriasOld.DataPedido;
 			obj.IdUsuario = feriasOld.IdUsuario;
 			obj.NomeUsuario = feriasOld.NomeUsuario;
 			obj.NomeDepartamento = feriasOld.NomeDepartamento;
-            obj.Status = feriasOld.Status;
-            var json = JsonConvert.SerializeObject(obj);
+			obj.Status = feriasOld.Status;
+			var json = JsonConvert.SerializeObject(obj);
 			var atualizaFerias = JsonConvert.DeserializeObject<Dictionary<string, object>>(json);
 			if (atualizaFerias == null) return new ResultViewModel(null, 400, false, ErrorMessages.SerializationFailed);
 			var resultUpdate = await Update(atualizaFerias, obj.Id);
@@ -103,7 +102,7 @@ namespace ZenDays.Service.Services
 				var usuario = await _userRepository.Get(feriasOld.IdUsuario);
 				if (usuario != null)
 				{
-					var diferencaEmMilissegundos = Util.ConvertToDateTime(feriasOld.DataInicio,"/") - Util.ConvertToDateTime(feriasOld.DataFim,"/");
+					var diferencaEmMilissegundos = Util.ConvertToDateTime(feriasOld.DataInicio, "/") - Util.ConvertToDateTime(feriasOld.DataFim, "/");
 					int qtdeDias = (int)diferencaEmMilissegundos.TotalDays;
 					usuario.SaldoFerias -= qtdeDias;
 
@@ -119,27 +118,16 @@ namespace ZenDays.Service.Services
 			return resultUpdate.Success ? new ResultViewModel(null, 200, true) : resultUpdate;
 
 		}
-
-     
-      
-        public async Task<ResultViewModel> GetAllFerias(string? userId, string? status)
+		public async Task<ResultViewModel> GetAllFerias(string? userId, string? tipoUsuario, string? idDepartamento, string? idUsuario, string? dataInicio, string? dataFim, string? status)
 		{
-			var fromdb = await _feriasRepository.GetAllFerias(userId, status);
-			return fromdb.Count == 0 ? new ResultViewModel(null, 404, false, ErrorMessages.NotFound) : new ResultViewModel(_mapper.Map<List<FeriasDTO>>(fromdb), 200, true, SuccessMessages.Found);
-		}
-	
-		public async Task<ResultViewModel> GetAllFeriasByTipoUsuario(string? tipoUsuario,string? idDepartamento,string? idUsuario,string? dataInicio,string? dataFim, string? status)
-		{
-			var fromdb = await _feriasRepository.GetAllFeriasByTipoUsuario(tipoUsuario, idDepartamento, idUsuario, status);
+			var fromdb = await _feriasRepository.GetAllFerias(userId, tipoUsuario, idDepartamento, idUsuario, status);
 
 
-			if(!string.IsNullOrEmpty(dataInicio) && !string.IsNullOrEmpty(dataFim))
+			if (!string.IsNullOrEmpty(dataInicio) && !string.IsNullOrEmpty(dataFim))
 			{
-				fromdb = fromdb.Where(x=> Util.ConvertToDateTime(x.DataPedido,"/").Date >= Util.ConvertToDateTime(dataInicio,"/").Date && Util.ConvertToDateTime(x.DataPedido, "/").Date <= Util.ConvertToDateTime(dataFim, "/").Date).ToList();
+				fromdb = fromdb.Where(x => Util.ConvertToDateTime(x.DataPedido, "/").Date >= Util.ConvertToDateTime(dataInicio, "/").Date && Util.ConvertToDateTime(x.DataPedido, "/").Date <= Util.ConvertToDateTime(dataFim, "/").Date).ToList();
 			}
 			return fromdb.Count == 0 ? new ResultViewModel(null, 404, false, ErrorMessages.NotFound) : new ResultViewModel(_mapper.Map<List<FeriasDTO>>(fromdb), 200, true, SuccessMessages.Found);
 		}
-
-
 	}
 }

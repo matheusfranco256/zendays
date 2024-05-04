@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ZenDays.Core.Models;
@@ -33,13 +32,9 @@ namespace ZenDays.API.Controllers
 		[HttpGet("GetById")]
 		public async Task<IActionResult> Get(string id) => Result(await _feriasService.Get(id));
 
+
 		[HttpGet]
-		[Route("usuario")]
-		public async Task<IActionResult> GetAll([FromQuery] string? userId, string? status) => Result(await _feriasService.GetAllFerias(userId, status));
-	
-		[HttpGet]
-		[Route("tipoUsuario")]
-		public async Task<IActionResult> GetAllByTipoUsuarioDepartamento([FromQuery] string? tipoUsuario, string? idDepartamento,string? idUsuario,string? dataInicio,string? dataFim, string? status) => Result(await _feriasService.GetAllFeriasByTipoUsuario(tipoUsuario, idDepartamento, idUsuario,dataInicio,dataFim, status));
+		public async Task<IActionResult> GetAll([FromQuery] string? userId, string? tipoUsuario, string? idDepartamento, string? idUsuarioExcluir, string? dataInicio, string? dataFim, string? status) => Result(await _feriasService.GetAllFerias(userId, tipoUsuario, idDepartamento, idUsuarioExcluir, dataInicio, dataFim, status));
 
 		[HttpDelete("Delete")]
 		public async Task<IActionResult> Delete(string id) => Result(await _feriasService.DeleteFerias(id));
