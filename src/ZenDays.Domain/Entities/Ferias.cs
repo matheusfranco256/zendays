@@ -14,6 +14,10 @@ namespace ZenDays.Domain.Entities
         public string DataValidacao { get; private set; } = null!;
         [FirestoreProperty("IdUsuario")]
         public string IdUsuario { get; private set; } = null!;
+        [FirestoreProperty("NomeUsuario")]
+        public string NomeUsuario { get; private set; } = null!;
+        [FirestoreProperty("NomeDepartamento")]
+        public string NomeDepartamento { get; private set; } = null!;
         [FirestoreProperty("DiasVendidos")]
         public int DiasVendidos { get; private set; }
         [FirestoreProperty("Status")]
@@ -21,13 +25,17 @@ namespace ZenDays.Domain.Entities
         [FirestoreProperty("Mensagem")]
         public string? Mensagem { get; private set; }
 
-        public Ferias(string dataInicio, string dataFim, string dataPedido, string dataValidacao, string idUsuario, int diasVendidos, int status, string? mensagem)
+      
+
+        public Ferias(string dataInicio, string dataFim, string dataPedido, string dataValidacao, string idUsuario,string nomeUsuario,string nomeDepartamento, int diasVendidos, int status, string? mensagem)
         {
             DataInicio = dataInicio;
             DataFim = dataFim;
             DataPedido = dataPedido;
             DataValidacao = dataValidacao;
             IdUsuario = idUsuario;
+            NomeUsuario = nomeUsuario;
+            NomeDepartamento = nomeDepartamento;
             DiasVendidos = diasVendidos;
             Status = status;
             Mensagem = mensagem;

@@ -16,19 +16,21 @@ namespace ZenDays.Service.Services
 	{
 		private readonly IUserService _userService;
 		private readonly IFeriasRepository _feriasRepository;
+		private readonly IDepartamentoRepository _departamentoRepository;
 		private readonly IUserRepository _userRepository;
-		public FeriasService(IFeriasRepository feriasRepository, IMapper mapper, IUserService userService, IUserRepository userRepository) : base(feriasRepository, mapper)
+		public FeriasService(IFeriasRepository feriasRepository, IMapper mapper, IUserService userService, IUserRepository userRepository, IDepartamentoRepository departamentoRepository) : base(feriasRepository, mapper)
 		{
 			_userService = userService;
 			_feriasRepository = feriasRepository;
 			_userRepository = userRepository;
+			_departamentoRepository = departamentoRepository;
 		}
 
 		public async Task<ResultViewModel> CreateFerias(CadastraFeriasInputModel obj)
 		{
 			var usuario = await _userService.Get(obj.IdUsuario);
 			if (usuario.Data == null) return new ResultViewModel(null, 404, false, ErrorMessages.NotFound);
-
+			var departamento = await _departamentoRepository.Get(usuario.Data.IdDepartamento);
 
 			var diferenca = DateTime.Parse(obj.DataFim) - DateTime.Parse(obj.DataInicio);
 			var qtdeDias = diferenca.TotalDays;
@@ -47,6 +49,8 @@ namespace ZenDays.Service.Services
 				DataValidacao = "",
 				DiasVendidos = obj.DiasVendidos,
 				IdUsuario = obj.IdUsuario,
+				NomeUsuario = usuario.Data.Nome,
+				NomeDepartamento = departamento != null && departamento!.Nome != null ? departamento!.Nome.ToString() : "" ,
 				Mensagem = obj.Mensagem,
 				Status = 0
 			};
@@ -70,13 +74,15 @@ namespace ZenDays.Service.Services
 		}
 		public async Task<ResultViewModel> UpdateFerias(FeriasDTO obj)
 		{
-			var usuario = await _userService.Get(obj.IdUsuario);
-			if (usuario.Data == null) return new ResultViewModel(null, 404, false, ErrorMessages.NotFound);
 			var feriasOld = await _feriasRepository.Get(obj.Id);
 			if (feriasOld == null) return new ResultViewModel(null, 404, false, ErrorMessages.NotFound);
-			obj.DataValidacao = feriasOld.DataValidacao;
+            var usuario = await _userService.Get(feriasOld.IdUsuario);
+            if (usuario.Data == null) return new ResultViewModel(null, 404, false, ErrorMessages.NotFound);
+            obj.DataValidacao = feriasOld.DataValidacao;
 			obj.DataPedido = feriasOld.DataPedido;
 			obj.IdUsuario = feriasOld.IdUsuario;
+			obj.NomeUsuario = feriasOld.NomeUsuario;
+			obj.NomeDepartamento = feriasOld.NomeDepartamento;
             obj.Status = feriasOld.Status;
             var json = JsonConvert.SerializeObject(obj);
 			var atualizaFerias = JsonConvert.DeserializeObject<Dictionary<string, object>>(json);
@@ -125,6 +131,8 @@ namespace ZenDays.Service.Services
 		public async Task<ResultViewModel> GetAllFeriasByTipoUsuario(string? tipoUsuario,string? idDepartamento,string? idUsuario,string? dataInicio,string? dataFim, string? status)
 		{
 			var fromdb = await _feriasRepository.GetAllFeriasByTipoUsuario(tipoUsuario, idDepartamento, idUsuario, status);
+
+
 			if(!string.IsNullOrEmpty(dataInicio) && !string.IsNullOrEmpty(dataFim))
 			{
 				fromdb = fromdb.Where(x=> Util.ConvertToDateTime(x.DataPedido,"/").Date >= Util.ConvertToDateTime(dataInicio,"/").Date && Util.ConvertToDateTime(x.DataPedido, "/").Date <= Util.ConvertToDateTime(dataFim, "/").Date).ToList();
