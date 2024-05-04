@@ -6,7 +6,7 @@ namespace ZenDays.Infra.Interfaces
 	{
 		Task<List<Ferias>> GetAllFerias(string? userId, string? status);
 		Task<List<Ferias>> GetAllFeriasByDepartamento(string? idDepartamento, string? status);
-		Task<List<Ferias>> GetAllFeriasByTipoUsuario(string tipoUsuario, string? idDepartamento, string? idUsuario, string? dataInicio, string? dataFim, string? status);
+		Task<List<Ferias>> GetAllFeriasByTipoUsuario(string? tipoUsuario, string? idDepartamento, string? idUsuario, string? status);
 
 	}
 }

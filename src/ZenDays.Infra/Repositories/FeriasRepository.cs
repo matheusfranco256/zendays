@@ -81,12 +81,12 @@ namespace ZenDays.Infra.Repositories
 		}
 
 		
-        public async Task<List<Ferias>> GetAllFeriasByTipoUsuario(string tipoUsuario, string? idDepartamento, string? idUsuario, string? dataInicio, string? dataFim, string? status)
+        public async Task<List<Ferias>> GetAllFeriasByTipoUsuario(string? tipoUsuario, string? idDepartamento, string? idUsuario, string? status)
         {
-            //usuarios por tipo
-            var usuariosQuery = _fireStoreDb.Collection(typeof(Usuario).Name)
-                .WhereEqualTo("TipoUsuario", int.Parse(tipoUsuario));
+			//usuarios por tipo
+			var usuariosQuery = _fireStoreDb.Collection(typeof(Usuario).Name).WhereNotEqualTo("Nome","");
             if (!string.IsNullOrEmpty(idDepartamento)) usuariosQuery = usuariosQuery.WhereEqualTo("IdDepartamento", idDepartamento);
+            if (!string.IsNullOrEmpty(tipoUsuario)) usuariosQuery = usuariosQuery.WhereEqualTo("TipoUsuario", int.Parse(tipoUsuario));
 
             var usuariosSnapshot = await usuariosQuery.GetSnapshotAsync();
             var idsUsuarios = usuariosSnapshot.Documents.Select(doc => doc.Id).ToList();
@@ -98,8 +98,7 @@ namespace ZenDays.Infra.Repositories
 
             if (!string.IsNullOrEmpty(status)) feriasQuery = feriasQuery.WhereEqualTo("Status", int.Parse(status));
             if (!string.IsNullOrEmpty(idUsuario)) feriasQuery = feriasQuery.WhereNotEqualTo("IdUsuario", idUsuario);
-            if (!string.IsNullOrEmpty(dataInicio)) feriasQuery = feriasQuery.WhereGreaterThanOrEqualTo("DataInicio", dataInicio);
-            if (!string.IsNullOrEmpty(dataFim)) feriasQuery = feriasQuery.WhereGreaterThanOrEqualTo("DataFim", dataFim);
+
             var feriasSnapshot = await feriasQuery.GetSnapshotAsync();
             List<Ferias> entitys = new();
 
