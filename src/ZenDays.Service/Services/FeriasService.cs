@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Newtonsoft.Json;
+using System.Globalization;
 using ZenDays.Core.Messages;
 using ZenDays.Core.Models;
 using ZenDays.Core.Utilities;
@@ -36,7 +37,7 @@ namespace ZenDays.Service.Services
 
 			//if (usuario.Data.SaldoFerias < qtdeDias) return new ResultViewModel(null, 400, false, "Saldo de ferias insuficiente.");
 
-			var diferencaInicio = DateTime.Parse(obj.DataInicio) - DateTime.Now;
+			var diferencaInicio = Util.ConvertToDateTime(obj.DataInicio,"/") - DateTime.Now;
 			if (diferencaInicio.TotalDays < 31) return new ResultViewModel(null, 400, false, "um mês de antecedência da data em que quer começar as férias.");
 
 			var dto = new FeriasDTO
@@ -44,8 +45,8 @@ namespace ZenDays.Service.Services
 				Ativo = true,
 				DataInicio = obj.DataInicio,
 				DataFim = obj.DataFim,
-				DataPedido = DateTime.Now.ToString("d"),
-				DataValidacao = "",
+                DataPedido = DateTime.Now.ToString("d", new CultureInfo("pt-BR")),
+                DataValidacao = "",
 				DiasVendidos = obj.DiasVendidos,
 				IdUsuario = obj.IdUsuario,
 				NomeUsuario = usuario.Data.Nome,
