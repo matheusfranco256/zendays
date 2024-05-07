@@ -146,7 +146,7 @@ namespace ZenDays.Service.Services
 
 				if (usuario.FinalPeriodoAquisitivo is not null)
 				{
-					var finalPeriodoAquisitivo = Util.ConvertToDateTime(usuario.FinalPeriodoAquisitivo, ".");
+					var finalPeriodoAquisitivo = Util.ConvertToDateTime(usuario.FinalPeriodoAquisitivo, "/");
 
 					if (dataAtual >= finalPeriodoAquisitivo)
 					{
