@@ -14,7 +14,7 @@ namespace ZenDays.Infra.Repositories
 		}
 		public async Task<List<Ferias>> GetAllFerias(string? userId, string? tipoUsuario, string? idDepartamento, string? idUsuarioExcluir, string? status, string? tipoUsuarioExcluir)
 		{
-			var usuariosQuery = _fireStoreDb.Collection(typeof(Usuario).Name).WhereNotEqualTo("Nome", "");
+			Query usuariosQuery = _fireStoreDb.Collection(typeof(Usuario).Name);
 
 			if (!string.IsNullOrEmpty(idDepartamento)) usuariosQuery = usuariosQuery.WhereEqualTo("IdDepartamento", idDepartamento);
 			if (!string.IsNullOrEmpty(tipoUsuario)) usuariosQuery = usuariosQuery.WhereEqualTo("TipoUsuario", int.Parse(tipoUsuario));
