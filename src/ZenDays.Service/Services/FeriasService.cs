@@ -1,6 +1,6 @@
-﻿using AutoMapper;
+﻿using System.Globalization;
+using AutoMapper;
 using Newtonsoft.Json;
-using System.Globalization;
 using ZenDays.Core.Messages;
 using ZenDays.Core.Models;
 using ZenDays.Core.Utilities;
@@ -37,7 +37,7 @@ namespace ZenDays.Service.Services
 
 			//if (usuario.Data.SaldoFerias < qtdeDias) return new ResultViewModel(null, 400, false, "Saldo de ferias insuficiente.");
 
-			var diferencaInicio = Util.ConvertToDateTime(obj.DataInicio,"/") - DateTime.Now;
+			var diferencaInicio = Util.ConvertToDateTime(obj.DataInicio, "/") - DateTime.Now;
 			if (diferencaInicio.TotalDays < 31) return new ResultViewModel(null, 400, false, "um mês de antecedência da data em que quer começar as férias.");
 
 			var dto = new FeriasDTO
@@ -45,8 +45,8 @@ namespace ZenDays.Service.Services
 				Ativo = true,
 				DataInicio = obj.DataInicio,
 				DataFim = obj.DataFim,
-                DataPedido = DateTime.Now.ToString("d", new CultureInfo("pt-BR")),
-                DataValidacao = "",
+				DataPedido = DateTime.Now.ToString("d", new CultureInfo("pt-BR")),
+				DataValidacao = "",
 				DiasVendidos = obj.DiasVendidos,
 				IdUsuario = obj.IdUsuario,
 				NomeUsuario = usuario.Data.Nome,
@@ -90,11 +90,12 @@ namespace ZenDays.Service.Services
 			var resultUpdate = await Update(atualizaFerias, obj.Id);
 			return resultUpdate.Success ? new ResultViewModel(null, 200, true) : resultUpdate;
 		}
-		public async Task<ResultViewModel> UpdateStatus(string id, Enumerators.Status status)
+		public async Task<ResultViewModel> UpdateStatus(string id, Enumerators.Status status, string? mensagem)
 		{
 			var feriasOld = await _feriasRepository.Get(id);
 			if (feriasOld == null) return new ResultViewModel(null, 404, false, ErrorMessages.NotFound);
 			feriasOld.Status = (int)status;
+			feriasOld.Mensagem = mensagem;
 			var json = JsonConvert.SerializeObject(feriasOld);
 			var atualizaFerias = JsonConvert.DeserializeObject<Dictionary<string, object>>(json);
 			if (atualizaFerias == null) return new ResultViewModel(null, 400, false, ErrorMessages.SerializationFailed);
@@ -130,7 +131,23 @@ namespace ZenDays.Service.Services
 			{
 				fromdb = fromdb.Where(x => Util.ConvertToDateTime(x.DataPedido, "/").Date >= Util.ConvertToDateTime(dataInicio, "/").Date && Util.ConvertToDateTime(x.DataPedido, "/").Date <= Util.ConvertToDateTime(dataFim, "/").Date).ToList();
 			}
-			return fromdb.Count == 0 ? new ResultViewModel(null, 404, false, ErrorMessages.NotFound) : new ResultViewModel(_mapper.Map<List<FeriasDTO>>(fromdb), 200, true, SuccessMessages.Found);
+
+			var retorno = fromdb.Select(x => new
+			{
+				x.Id,
+				x.IdUsuario,
+				x.NomeUsuario,
+				x.NomeDepartamento,
+				x.DataInicio,
+				x.DataFim,
+				x.DataPedido,
+				x.DataValidacao,
+				x.DiasVendidos,
+				x.Mensagem,
+				status = ((Enumerators.Status)x.Status).ToString()
+			});
+
+			return fromdb.Count == 0 ? new ResultViewModel(null, 404, false, ErrorMessages.NotFound) : new ResultViewModel(retorno, 200, true, SuccessMessages.Found);
 		}
 	}
 }

@@ -12,6 +12,6 @@ namespace ZenDays.Service.Interfaces
 		Task<ResultViewModel> UpdateFerias(FeriasDTO obj);
 		Task<ResultViewModel> DeleteFerias(string id);
 		Task<ResultViewModel> GetAllFerias(string? userId, string? tipoUsuario, string? idDepartamento, string? idUsuario, string? dataInicio, string? dataFim, string? status, string? tipoUsuarioExcluir);
-		Task<ResultViewModel> UpdateStatus(string id, Enumerators.Status status);
+		Task<ResultViewModel> UpdateStatus(string id, Enumerators.Status status, string? mensagem);
 	}
 }

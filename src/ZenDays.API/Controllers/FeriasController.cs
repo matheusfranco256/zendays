@@ -40,7 +40,7 @@ namespace ZenDays.API.Controllers
 		public async Task<IActionResult> Delete(string id) => Result(await _feriasService.DeleteFerias(id));
 
 		[HttpPatch("Status")]
-		public async Task<IActionResult> Status(string id, Enumerators.Status status) => Result(await _feriasService.UpdateStatus(id, status));
+		public async Task<IActionResult> Status(string id, Enumerators.Status status, string? mensagem) => Result(await _feriasService.UpdateStatus(id, status, mensagem));
 
 	}
 }
