@@ -144,7 +144,7 @@ namespace ZenDays.Service.Services
 				x.DataValidacao,
 				x.DiasVendidos,
 				x.Mensagem,
-				status = ((Enumerators.Status)x.Status).ToString()
+				Status = (int)x.Status
 			});
 
 			return fromdb.Count == 0 ? new ResultViewModel(null, 404, false, ErrorMessages.NotFound) : new ResultViewModel(retorno, 200, true, SuccessMessages.Found);
